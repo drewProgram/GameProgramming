@@ -1,7 +1,11 @@
 ﻿#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <print>
+#include <cmath>
 
 #include "Vector.h"
 #include "Shader.h"
@@ -46,6 +50,11 @@ static void VectorTests()
 
 	v3 = v1.Normalize();
 	std::println("Vector 1: {0}; Vector 1 normalized: {1}", v1.ToString(), v3.ToString());
+}
+
+static void RenderObject(Shader objShader)
+{
+
 }
 
 int main()
@@ -152,15 +161,20 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// render stuff
+		// creating transformations
+		glm::mat4 transform = glm::mat4(1.0f); // creating identity matrix
+		transform = glm::translate(transform, glm::vec3(0.0f, (float)sin(glfwGetTime()), 0.0f));
+		transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+
 		// use the created program and the vertex array
 		triangleShader.Use();
+		unsigned int transformLoc = glGetUniformLocation(triangleShader.id, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 
 		// bind vertex array of object you want to render
 		glBindVertexArray(VAO);
-
 		// then draw
 		glDrawArrays(GL_TRIANGLES, 0, 3);
-
 		// unbind vertex array of rendered object
 		glBindVertexArray(0);
 
@@ -168,6 +182,10 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteProgram(triangleShader.id);
 
 	// Cleanup
 	glfwDestroyWindow(window);

@@ -111,3 +111,8 @@ void Shader::SetFloat(const std::string& name, float value) const
 {
 	glUniform1f(glGetUniformLocation(id, name.c_str()), value);
 }
+
+void Shader::SetMat4(const std::string& name) const
+{
+	
+}

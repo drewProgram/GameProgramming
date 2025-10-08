@@ -15,11 +15,15 @@ public:
 
 	unsigned int id;
 
-	// activate shader
+	// activate shader 
 	void Use();
 
 	// utility uniform functions
+	// single value
 	void SetBool(const std::string& name, bool value) const;
 	void SetInt(const std::string& name, int value) const;
 	void SetFloat(const std::string& name, float value) const;
+
+	// matrices
+	void SetMat4(const std::string& name) const;
 };

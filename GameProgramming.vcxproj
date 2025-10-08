@@ -71,11 +71,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\dev\cpp\GameProgramming\external\glad\include;C:\cpp-libs\glfw-3.4\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\cpp-libs\glm-1.0.1-light;C:\dev\cpp\GameProgramming\external\glad\include;C:\cpp-libs\glfw-3.4\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\cpp-libs\glfw-3.4\build\src\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\dev\cpp\GameProgramming\external\glad\include;C:\cpp-libs\glfw-3.4\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\cpp-libs\glm-1.0.1-light;C:\dev\cpp\GameProgramming\external\glad\include;C:\cpp-libs\glfw-3.4\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\cpp-libs\glfw-3.4\build\src\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -142,11 +142,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="external\glad\glad.c" />
+    <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Vector.h" />
   </ItemGroup>
