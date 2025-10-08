@@ -1,28 +1,13 @@
-#include <glad/glad.h>
+﻿#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <print>
 
 #include "Vector.h"
+#include "Shader.h"
 
 const unsigned int ScreenWidth = 640;
 const unsigned int ScreenHeight = 480;
-
-const char* vertexShaderSrc = "#version 460 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0"
-;
-
-const char* fragmentShaderSrc = "#version 460 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"	FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\0"
-;
 
 static void HandleInput()
 {
@@ -98,67 +83,8 @@ int main()
 	// setting viewport to be the same as screen (possible to make smaller viewport and render things outside the main viewport)
 	glViewport(0, 0, ScreenWidth, ScreenHeight);
 
-	/*
-		Creating shader object to compile our vertex shader
-	*/
-	// create object
-	unsigned int vertexShader;
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-	/*
-		param 1: shader object
-		param 2: how many strings are being passed as src code
-		param 3: source code
-		param 4: ?
-	*/
-	glShaderSource(vertexShader, 1, &vertexShaderSrc, NULL);
-	glCompileShader(vertexShader);
-
-	// checking if compilation was successful
-	int success;
-	char infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::println("ERROR: SHADER VERTEX COMPILATION FAILED. MORE INFO:\n{0}", infoLog);
-	}
-
-	// creating fragment shader
-	unsigned int fragmentShader;
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSrc, NULL);
-	glCompileShader(fragmentShader);
-
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::println("ERROR: FRAGMENT SHADER COMPILATION FAILED. MORE INFO:\n{0}", infoLog);
-	}
-
 	// creating shader program
-	unsigned int shaderProgram;
-	shaderProgram = glCreateProgram();
-
-	// linking vertex and fragment shaders
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	// check for erros on the linking process
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success)
-	{
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::println("ERROR: SHADER PROGRAM LINKING FAILED. MORE INFO:\n{0}", infoLog);
-	}
-
-	// after linking the shader into the program successfully, we can delete the shaders
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+	Shader triangleShader("src/shaders/crazyTriangle.vert", "src/shaders/crazyTriangle.frag");
 
 	// VERTEX INPUT
 	/*
@@ -166,9 +92,10 @@ int main()
 	*/
 	// vertex data of 2D triangle (position of 3 vertices)
 	float vertices[] = {
-		-0.5f, -0.5f, 0.0f, // left
-		 0.5f, -0.5f, 0.0f, // right
-		 0.0f,  0.5f, 0.0f  // top
+		// positions         // colors
+		 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
+		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // bottom left
+		 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // top
 	};
 
 	/*
@@ -197,14 +124,22 @@ int main()
 		param 3: type of data
 		param 4: whether data needs to be normalized
 		param 5: stride - space between consecutive vertex attr (as each value in this case is a float 3d vector)
-		param 6: offset where position data begins in the buffer
+		param 6: offset where this attr data begins in the buffer
 	*/
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	// vertex attributes are off by default, we need to enable them
 	glEnableVertexAttribArray(0);
 
+	// color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
 	// after defining the attribute pointers, the vbo is registred as being bound to this vao, so we can safely unbind
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// Wireframe mode
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// application main loop
 	while (!glfwWindowShouldClose(window))
@@ -218,7 +153,7 @@ int main()
 
 		// render stuff
 		// use the created program and the vertex array
-		glUseProgram(shaderProgram);
+		triangleShader.Use();
 
 		// bind vertex array of object you want to render
 		glBindVertexArray(VAO);
