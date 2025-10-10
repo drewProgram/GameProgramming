@@ -146,11 +146,14 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Vector.cpp" />
+    <ClCompile Include="src\VectorShape.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\Shape.h" />
     <ClInclude Include="src\Vector.h" />
+    <ClInclude Include="src\VectorShape.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

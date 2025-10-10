@@ -6,9 +6,12 @@
 
 #include <print>
 #include <cmath>
+#include <memory>
 
 #include "Vector.h"
 #include "Shader.h"
+#include "Entity.h"
+#include "VectorShape.h"
 
 const unsigned int ScreenWidth = 640;
 const unsigned int ScreenHeight = 480;
@@ -52,11 +55,6 @@ static void VectorTests()
 	std::println("Vector 1: {0}; Vector 1 normalized: {1}", v1.ToString(), v3.ToString());
 }
 
-static void RenderObject(Shader objShader)
-{
-
-}
-
 int main()
 {
 	std::println("Game Maths with OpenGL and C++ 23!!\n");
@@ -93,59 +91,25 @@ int main()
 	glViewport(0, 0, ScreenWidth, ScreenHeight);
 
 	// creating shader program
-	Shader triangleShader("src/shaders/crazyTriangle.vert", "src/shaders/crazyTriangle.frag");
+	Shader vecShader("src/shaders/vectorShape.vert", "src/shaders/vectorShape.frag");
 
-	// VERTEX INPUT
-	/*
-		Note: to render in 2D, just ignore the Z coords (set to 0)
-	*/
-	// vertex data of 2D triangle (position of 3 vertices)
-	float vertices[] = {
-		// positions         // colors
-		 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // bottom left
-		 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // top
-	};
+	unsigned int vecVBO;
+	unsigned int vecVAO;
 
-	/*
-		Allocating vertices on a buffer so we can go to the first step of
-		graphics pipeline
-	*/
-	// create OpenGL buffer object and vertex array object
-	unsigned int VBO;
-	unsigned int VAO;
+	glGenBuffers(1, &vecVBO);
+	glGenVertexArrays(1, &vecVAO);
 
-	glGenBuffers(1, &VBO);
-	glGenVertexArrays(1, &VAO);
+	// with shared ptr we can use polymorphism and use the same shape instance for all entities
+	std::shared_ptr<VectorShape> vecShape = std::make_shared<VectorShape>(&vecShader, vecVAO, vecVBO);
 
-	// first bind vertex array, then bind and set vertex buffer, and then configure vertex attributes
-	glBindVertexArray(VAO);
-
-	// binds created object to a target
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	// copy user defined data to the currently bound buffer with target GL_ARRAY_BUFFER
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	// telling opengl how to interpret the vertex attributes on the vertex data
-	/*
-		param 1: which vertex attr we want to configure
-		param 2: size of the vertex attrb
-		param 3: type of data
-		param 4: whether data needs to be normalized
-		param 5: stride - space between consecutive vertex attr (as each value in this case is a float 3d vector)
-		param 6: offset where this attr data begins in the buffer
-	*/
-	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	// vertex attributes are off by default, we need to enable them
-	glEnableVertexAttribArray(0);
-
-	// color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	// after defining the attribute pointers, the vbo is registred as being bound to this vao, so we can safely unbind
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	Entity vecTest(vecShape);
+	vecTest.position = { 0.1f, 0.0f, 0.0f };
+	vecTest.randomVec = { 0.2f, 0.3f, 0.0f };
+	
+	Entity vecTest2(vecShape);
+	vecTest2.position = { 0.0f, 0.5f, 0.0f };
+	vecTest2.randomVec = { -0.8f, 0.8f, 0.0f };
+	vecTest2.color = { 0.0f, 1.0f, 0.0f };
 
 	// Wireframe mode
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -161,31 +125,17 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// render stuff
-		// creating transformations
-		glm::mat4 transform = glm::mat4(1.0f); // creating identity matrix
-		transform = glm::translate(transform, glm::vec3(0.0f, (float)sin(glfwGetTime()), 0.0f));
-		transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-
-		// use the created program and the vertex array
-		triangleShader.Use();
-		unsigned int transformLoc = glGetUniformLocation(triangleShader.id, "transform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
-
-		// bind vertex array of object you want to render
-		glBindVertexArray(VAO);
-		// then draw
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-		// unbind vertex array of rendered object
-		glBindVertexArray(0);
+		vecTest.Render();
+		vecTest2.Render();
 
 		// check and call events and swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteProgram(triangleShader.id);
+	glDeleteVertexArrays(1, &vecVAO);
+	glDeleteBuffers(1, &vecVBO);
+	glDeleteProgram(vecShader.id);
 
 	// Cleanup
 	glfwDestroyWindow(window);
