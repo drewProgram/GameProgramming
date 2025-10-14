@@ -30,13 +30,6 @@ VectorShape::VectorShape(Shader* _shader, unsigned int _VAO, unsigned int _VBO)
 		1.0f ,  0.0f ,  0.0f   // top
 	};
 
-	glm::vec3 a = { 0.85f,  0.05f,  0.0f };
-	glm::vec3 b = { 0.85f, -0.05f,  0.0f };
-	glm::vec3 c = { 1.0f ,  0.0f ,  0.0f };
-
-
-	float trianglePorpotion;
-
 	// first bind vertex array, then bind and set vertex buffer, and then configure vertex attributes
 	glBindVertexArray(VAO);
 
@@ -91,7 +84,7 @@ void VectorShape::Render(const UniformMap& uniforms)
 
 		transform = glm::rotate(transform, angle, glm::vec3(0.0f, 0.0f, 1.0f));
 
-		transform = glm::scale(transform, glm::vec3(length, length, 1.0f));
+		transform = glm::scale(transform, glm::vec3(length, 1.0f, 1.0f));
 
 		shader->SetMat4("transform", transform);
 	}

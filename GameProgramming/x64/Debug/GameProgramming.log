@@ -1,3 +1,2 @@
-﻿  VectorShape.cpp
-C:\dev\cpp\GameProgramming\src\VectorShape.cpp(38,8): warning C4101: 'trianglePorpotion': unreferenced local variable
+﻿  main.cpp
   GameProgramming.vcxproj -> C:\dev\cpp\GameProgramming\x64\Debug\GameProgramming.exe

@@ -1,4 +1,13 @@
 C:\dev\cpp\GameProgramming\external\glad\glad.c;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\glad.obj
+C:\dev\cpp\GameProgramming\external\imgui\backends\imgui_impl_glfw.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\imgui_impl_glfw.obj
+C:\dev\cpp\GameProgramming\external\imgui\backends\imgui_impl_opengl3.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\imgui_impl_opengl3.obj
+C:\dev\cpp\GameProgramming\external\imgui\backends\imgui_impl_win32.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\imgui_impl_win32.obj
+C:\dev\cpp\GameProgramming\external\imgui\imgui.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\imgui.obj
+C:\dev\cpp\GameProgramming\external\imgui\imgui_demo.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\imgui_demo.obj
+C:\dev\cpp\GameProgramming\external\imgui\imgui_draw.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\imgui_draw.obj
+C:\dev\cpp\GameProgramming\external\imgui\imgui_tables.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\imgui_tables.obj
+C:\dev\cpp\GameProgramming\external\imgui\imgui_widgets.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\imgui_widgets.obj
+C:\dev\cpp\GameProgramming\external\imgui\misc\cpp\imgui_stdlib.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\imgui_stdlib.obj
 C:\dev\cpp\GameProgramming\src\Entity.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\Entity.obj
 C:\dev\cpp\GameProgramming\src\main.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\main.obj
 C:\dev\cpp\GameProgramming\src\Shader.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\Shader.obj
