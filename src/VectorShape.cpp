@@ -1,8 +1,11 @@
-﻿#include "VectorShape.h"
+﻿#define GLM_ENABLE_EXPERIMENTAL
+
+#include "VectorShape.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include <print>
 #include <tuple>
@@ -15,18 +18,24 @@ VectorShape::VectorShape(Shader* _shader, unsigned int _VAO, unsigned int _VBO)
 	VBO = _VBO;
 
 	mainVector = { 1.0f, 0.0f, 0.0f };
-	
 
 	vertexData = {
 		// line positions
 		0.0f, 0.0f, 0.0f,  // vector start
-		0.1f, 0.0f, 0.0f,  // vector end
+		1.0f, 0.0f, 0.0f,  // vector end
 
 		// triangle positions
-		0.07f,  0.03f,  0.0f,  // left base
-		0.07f, -0.03f,  0.0f,  // right base
-		0.1f ,  0.0f ,  0.0f   // top
+		0.85f,  0.05f,  0.0f,  // left base
+		0.85f, -0.05f,  0.0f,  // right base
+		1.0f ,  0.0f ,  0.0f   // top
 	};
+
+	glm::vec3 a = { 0.85f,  0.05f,  0.0f };
+	glm::vec3 b = { 0.85f, -0.05f,  0.0f };
+	glm::vec3 c = { 1.0f ,  0.0f ,  0.0f };
+
+
+	float trianglePorpotion;
 
 	// first bind vertex array, then bind and set vertex buffer, and then configure vertex attributes
 	glBindVertexArray(VAO);
@@ -73,15 +82,16 @@ void VectorShape::Render(const UniformMap& uniforms)
 
 		glm::vec3 baseVector = { 1.0f, 0.0f, 0.0f };
 
-		float angle = acos(glm::dot(glm::normalize(baseVector), glm::normalize(mainVector)));
+		// this method does not work, it does not shows if needs to make negative of positive rotation 
+		//float angle = acos(glm::dot(glm::normalize(baseVector), glm::normalize(mainVector)));
+
+		float angle = atan2(mainVector.y, mainVector.x);
 
 		float length = glm::length(mainVector);
 
 		transform = glm::rotate(transform, angle, glm::vec3(0.0f, 0.0f, 1.0f));
 
-		transform = glm::scale(transform, glm::vec3(length, 1.0f, 1.0f));
-
-		//transform = glm::translate(transform, position);
+		transform = glm::scale(transform, glm::vec3(length, length, 1.0f));
 
 		shader->SetMat4("transform", transform);
 	}

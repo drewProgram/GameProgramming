@@ -1,5 +1,8 @@
-﻿#include <glad/glad.h>
+﻿#include <windows.h>
+
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -59,6 +62,9 @@ int main()
 {
 	std::println("Game Maths with OpenGL and C++ 23!!\n");
 
+	SetConsoleOutputCP(CP_UTF8);
+	SetConsoleCP(CP_UTF8);
+
 	glfwSetErrorCallback(GLFWErrorCallback);
 
 	if (!glfwInit())
@@ -108,7 +114,7 @@ int main()
 	
 	Entity vecTest2(vecShape);
 	vecTest2.position = { 0.0f, 0.5f, 0.0f };
-	vecTest2.randomVec = { -0.8f, 0.8f, 0.0f };
+	vecTest2.randomVec = { -0.8f, -0.5f, 0.0f };
 	vecTest2.color = { 0.0f, 1.0f, 0.0f };
 
 	// Wireframe mode

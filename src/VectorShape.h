@@ -16,5 +16,6 @@ public:
 private:
 	glm::vec3 mainVector;
 	glm::vec3 position;
+
 };
 
