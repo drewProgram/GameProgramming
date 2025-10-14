@@ -20,8 +20,8 @@
 #include "Entity.h"
 #include "VectorShape.h"
 
-const unsigned int ScreenWidth = 640;
-const unsigned int ScreenHeight = 480;
+const unsigned int ScreenWidth = 1280;
+const unsigned int ScreenHeight = 800;
 
 static void HandleInput()
 {
@@ -145,9 +145,8 @@ int main()
 	*/
 
 	// ImGui states
-	bool show_demo_window = true;
-	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+	bool vec1PropsVisible = true;
 
 	// creating shader program
 	Shader vecShader("src/shaders/vectorShape.vert", "src/shaders/vectorShape.frag");
@@ -164,11 +163,14 @@ int main()
 	Entity vecTest(vecShape);
 	vecTest.position = { 0.0f, 0.0f, 0.0f };
 	vecTest.randomVec = { 0.2f, -0.3f, 0.0f };
+	vecTest.color = { 0.2f, 0.3f, 0.0f };
+	ImVec4 color1 = ImVec4(vecTest.color.x, vecTest.color.y, vecTest.color.z, 1.00f);
 	
 	Entity vecTest2(vecShape);
 	vecTest2.position = { 0.0f, 0.5f, 0.0f };
 	vecTest2.randomVec = { -0.8f, -0.5f, 0.0f };
 	vecTest2.color = { 0.0f, 1.0f, 0.0f };
+	ImVec4 color2 = ImVec4(vecTest2.color.x, vecTest2.color.y, vecTest2.color.z, 1.00f);
 
 	// Wireframe mode
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -204,16 +206,51 @@ int main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-		if (show_demo_window)
-			ImGui::ShowDemoWindow(&show_demo_window);
+		// Vector manipulation sliders
+		{
+			ImGui::Begin("Vector manipulation");
+			ImGui::SetWindowSize(ImVec2(500, 250));
 
-		// render stuff
+			if (ImGui::CollapsingHeader("Vector 1 properties", true))
+			{
+				ImGui::Text("Position");
+				ImGui::SliderFloat("V1 P.X", &vecTest.position.x, -1.0f, 1.0f);
+				ImGui::SliderFloat("V1 P.Y", &vecTest.position.y, -1.0f, 1.0f);
+
+				ImGui::Text("Value");
+				ImGui::SliderFloat("V1 V.X", &vecTest.randomVec.x, -1.0f, 1.0f);
+				ImGui::SliderFloat("V1 V.Y", &vecTest.randomVec.y, -1.0f, 1.0f);
+
+				ImGui::ColorEdit3("V1 Color", (float*)&color1);
+				vecTest.color = { color1.x * color1.w, color1.y * color1.w, color1.z * color1.w };
+			}
+
+			if (ImGui::CollapsingHeader("Vector 2 properties", true))
+			{
+				ImGui::Text("Position");
+				ImGui::SliderFloat("V2 P.X", &vecTest2.position.x, -1.0f, 1.0f);
+				ImGui::SliderFloat("V2 P.Y", &vecTest2.position.y, -1.0f, 1.0f);
+
+				ImGui::Text("Value");
+				ImGui::SliderFloat("V2 V.X", &vecTest2.randomVec.x, -1.0f, 1.0f);
+				ImGui::SliderFloat("V2 V.Y", &vecTest2.randomVec.y, -1.0f, 1.0f);
+
+				ImGui::ColorEdit3("V2 Color", (float*)&color2);
+				vecTest2.color = { color2.x * color2.w, color2.y * color2.w, color2.z * color2.w };
+			}
+
+			ImGui::ColorEdit3("Clear color", (float*)&clear_color);
+
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+
+			ImGui::End();
+		}
+
+		// render stuff (always render opengl first)
 		vecTest.Render();
 		vecTest2.Render();
 
 		ImGui::Render();
-		
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		// check and call events and swap buffers
