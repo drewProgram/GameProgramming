@@ -11,9 +11,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <print>
 #include <cmath>
 #include <memory>
+#include <vector>
+// c++ 23 exclusives
+#include <print>
+#include <ranges>
 
 #include "Vector.h"
 #include "Shader.h"
@@ -64,6 +67,9 @@ static void VectorTests()
 
 int main()
 {
+	// alias
+	using EntityPtr = std::unique_ptr<Entity>;
+
 	std::println("Game Maths with OpenGL and C++ 23!!\n");
 
 	SetConsoleOutputCP(CP_UTF8);
@@ -160,17 +166,21 @@ int main()
 	// with shared ptr we can use polymorphism and use the same shape instance for all entities
 	std::shared_ptr<VectorShape> vecShape = std::make_shared<VectorShape>(&vecShader, vecVAO, vecVBO);
 
-	Entity vecTest(vecShape);
-	vecTest.position = { 0.0f, 0.0f, 0.0f };
-	vecTest.randomVec = { 0.2f, -0.3f, 0.0f };
-	vecTest.color = { 0.2f, 0.3f, 0.0f };
-	ImVec4 color1 = ImVec4(vecTest.color.x, vecTest.color.y, vecTest.color.z, 1.00f);
+	std::vector<EntityPtr> entities;
+
+	EntityPtr vecTest = std::make_unique<Entity>(vecShape);
+	vecTest->position = { 0.0f, 0.0f, 0.0f };
+	vecTest->randomVec = { 0.2f, -0.3f, 0.0f };
+	vecTest->colorVec = { 0.2f, 0.3f, 0.0f };
+	vecTest->color = ImVec4(vecTest->colorVec.x, vecTest->colorVec.y, vecTest->colorVec.z, 1.00f);
+	entities.push_back(std::move(vecTest));
 	
-	Entity vecTest2(vecShape);
-	vecTest2.position = { 0.0f, 0.5f, 0.0f };
-	vecTest2.randomVec = { -0.8f, -0.5f, 0.0f };
-	vecTest2.color = { 0.0f, 1.0f, 0.0f };
-	ImVec4 color2 = ImVec4(vecTest2.color.x, vecTest2.color.y, vecTest2.color.z, 1.00f);
+	EntityPtr vecTest2 = std::make_unique<Entity>(vecShape);
+	vecTest2->position = { 0.0f, 0.5f, 0.0f };
+	vecTest2->randomVec = { -0.8f, -0.5f, 0.0f };
+	vecTest2->colorVec = { 0.0f, 1.0f, 0.0f };
+	vecTest2->color = ImVec4(vecTest2->colorVec.x, vecTest2->colorVec.y, vecTest2->colorVec.z, 1.00f);
+	entities.push_back(std::move(vecTest2));
 
 	// Wireframe mode
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -211,32 +221,24 @@ int main()
 			ImGui::Begin("Vector manipulation");
 			ImGui::SetWindowSize(ImVec2(500, 250));
 
-			if (ImGui::CollapsingHeader("Vector 1 properties", true))
+			for (auto [i, entity] : std::views::enumerate(entities))
 			{
-				ImGui::Text("Position");
-				ImGui::SliderFloat("V1 P.X", &vecTest.position.x, -1.0f, 1.0f);
-				ImGui::SliderFloat("V1 P.Y", &vecTest.position.y, -1.0f, 1.0f);
+				std::string entityName = "V" + std::to_string(i + 1);
+				std::string title = "Vector " + std::to_string(i) + " properties";
 
-				ImGui::Text("Value");
-				ImGui::SliderFloat("V1 V.X", &vecTest.randomVec.x, -1.0f, 1.0f);
-				ImGui::SliderFloat("V1 V.Y", &vecTest.randomVec.y, -1.0f, 1.0f);
+				if (ImGui::CollapsingHeader(title.c_str(), true))
+				{
+					ImGui::Text("Position");
+					ImGui::SliderFloat(("P.X##" + std::to_string(i)).c_str(), &entity->position.x, -1.0f, 1.0f);
+					ImGui::SliderFloat(("P.Y##" + std::to_string(i)).c_str(), &entity->position.y, -1.0f, 1.0f);
 
-				ImGui::ColorEdit3("V1 Color", (float*)&color1);
-				vecTest.color = { color1.x * color1.w, color1.y * color1.w, color1.z * color1.w };
-			}
+					ImGui::Text("Value");
+					ImGui::SliderFloat(("V.X##" + std::to_string(i)).c_str(), &entity->randomVec.x, -1.0f, 1.0f);
+					ImGui::SliderFloat(("V.Y##" + std::to_string(i)).c_str(), &entity->randomVec.y, -1.0f, 1.0f);
 
-			if (ImGui::CollapsingHeader("Vector 2 properties", true))
-			{
-				ImGui::Text("Position");
-				ImGui::SliderFloat("V2 P.X", &vecTest2.position.x, -1.0f, 1.0f);
-				ImGui::SliderFloat("V2 P.Y", &vecTest2.position.y, -1.0f, 1.0f);
-
-				ImGui::Text("Value");
-				ImGui::SliderFloat("V2 V.X", &vecTest2.randomVec.x, -1.0f, 1.0f);
-				ImGui::SliderFloat("V2 V.Y", &vecTest2.randomVec.y, -1.0f, 1.0f);
-
-				ImGui::ColorEdit3("V2 Color", (float*)&color2);
-				vecTest2.color = { color2.x * color2.w, color2.y * color2.w, color2.z * color2.w };
+					ImGui::ColorEdit3(("Color##" + std::to_string(i)).c_str(), (float*)&entity->color);
+					entity->colorVec = { entity->color.x * entity->color.w, entity->color.y * entity->color.w, entity->color.z * entity->color.w };
+				}
 			}
 
 			ImGui::ColorEdit3("Clear color", (float*)&clear_color);
@@ -246,9 +248,11 @@ int main()
 			ImGui::End();
 		}
 
-		// render stuff (always render opengl first)
-		vecTest.Render();
-		vecTest2.Render();
+		for (auto& entity : entities)
+		{
+			// render stuff (always render opengl first)
+			entity->Render();
+		}
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

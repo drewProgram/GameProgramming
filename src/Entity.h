@@ -3,6 +3,8 @@
 #include "Shader.h"
 #include "Shape.h"
 
+#include <imgui.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -19,7 +21,8 @@ public:
 
 	glm::vec3 position;
 
-	glm::vec3 color;
+	glm::vec3 colorVec;
+	ImVec4 color;
 
 	glm::vec3 randomVec;
 
