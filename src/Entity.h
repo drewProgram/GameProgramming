@@ -20,6 +20,7 @@ public:
 	glm::mat4 transform;
 
 	glm::vec3 position;
+	float rotationAngle;
 
 	glm::vec3 colorVec;
 	ImVec4 color;

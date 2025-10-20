@@ -19,6 +19,7 @@ struct UniformValue
 {
 	Type type;
 
+	// variant is similar to union
 	std::variant<glm::mat4, glm::vec3, float, int> value;
 };
 

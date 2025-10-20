@@ -14,9 +14,10 @@
 #include <cmath>
 #include <memory>
 #include <vector>
-// c++ 23 exclusives
-#include <print>
+// C++ 20
 #include <ranges>
+// C++ 23
+#include <print>
 
 #include "Vector.h"
 #include "Shader.h"
@@ -169,18 +170,20 @@ int main()
 	std::vector<EntityPtr> entities;
 
 	EntityPtr vecTest = std::make_unique<Entity>(vecShape);
+
 	vecTest->position = { 0.0f, 0.0f, 0.0f };
 	vecTest->randomVec = { 0.2f, -0.3f, 0.0f };
 	vecTest->colorVec = { 0.2f, 0.3f, 0.0f };
 	vecTest->color = ImVec4(vecTest->colorVec.x, vecTest->colorVec.y, vecTest->colorVec.z, 1.00f);
+	// move operation, vecTest is now empty. Ptr ownership goes to entity list
 	entities.push_back(std::move(vecTest));
 	
-	EntityPtr vecTest2 = std::make_unique<Entity>(vecShape);
-	vecTest2->position = { 0.0f, 0.5f, 0.0f };
-	vecTest2->randomVec = { -0.8f, -0.5f, 0.0f };
-	vecTest2->colorVec = { 0.0f, 1.0f, 0.0f };
-	vecTest2->color = ImVec4(vecTest2->colorVec.x, vecTest2->colorVec.y, vecTest2->colorVec.z, 1.00f);
-	entities.push_back(std::move(vecTest2));
+	vecTest = std::make_unique<Entity>(vecShape);
+	vecTest->position = { 0.0f, 0.5f, 0.0f };
+	vecTest->randomVec = { -0.8f, -0.5f, 0.0f };
+	vecTest->colorVec = { 0.0f, 1.0f, 0.0f };
+	vecTest->color = ImVec4(vecTest->colorVec.x, vecTest->colorVec.y, vecTest->colorVec.z, 1.00f);
+	entities.push_back(std::move(vecTest));
 
 	// Wireframe mode
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -221,10 +224,11 @@ int main()
 			ImGui::Begin("Vector manipulation");
 			ImGui::SetWindowSize(ImVec2(500, 250));
 
+			// std::views::enumarate is C++ 23 exclusive
 			for (auto [i, entity] : std::views::enumerate(entities))
 			{
 				std::string entityName = "V" + std::to_string(i + 1);
-				std::string title = "Vector " + std::to_string(i) + " properties";
+				std::string title = "Vector " + std::to_string(i + 1) + " properties";
 
 				if (ImGui::CollapsingHeader(title.c_str(), true))
 				{
@@ -235,6 +239,15 @@ int main()
 					ImGui::Text("Value");
 					ImGui::SliderFloat(("V.X##" + std::to_string(i)).c_str(), &entity->randomVec.x, -1.0f, 1.0f);
 					ImGui::SliderFloat(("V.Y##" + std::to_string(i)).c_str(), &entity->randomVec.y, -1.0f, 1.0f);
+
+					ImGui::Text("Rotation Angle");
+					ImGui::SliderFloat(("V.R##" + std::to_string(i)).c_str(), &entity->rotationAngle, -360.0f, 360.0f);
+
+					ImGui::Text("Angle: %f", entity->rotationAngle);
+					ImGui::Text("Sin of angle: %f", sin(glm::radians(entity->rotationAngle)));
+					ImGui::Text("Cos of angle: %f", cos(glm::radians(entity->rotationAngle)));
+
+
 
 					ImGui::ColorEdit3(("Color##" + std::to_string(i)).c_str(), (float*)&entity->color);
 					entity->colorVec = { entity->color.x * entity->color.w, entity->color.y * entity->color.w, entity->color.z * entity->color.w };
