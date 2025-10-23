@@ -8,8 +8,10 @@
 #include <string>
 #include <unordered_map>
 #include <any>
+#include <memory>
 
 #include "Shader.h"
+#include "Texture.h"
 
 enum class Type { Mat4, Vec3, Float, Int };
 
@@ -34,11 +36,13 @@ public:
 
 	virtual void SetProperty(const Prop prop, const std::any& value) {};
 
+	std::shared_ptr<Texture> texture = nullptr;
 protected:
 	std::vector<float> vertexData;
+	std::vector<unsigned int> indicesData;
 
 	Shader* shader = nullptr;
 
-	unsigned int VAO = 0, VBO = 0;
+	unsigned int VAO = 0, VBO = 0, EBO = 0;
 };
 

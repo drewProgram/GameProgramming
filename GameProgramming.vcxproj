@@ -71,11 +71,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\dev\cpp\GameProgramming\external\imgui\backends;C:\dev\cpp\GameProgramming\external\imgui;C:\cpp-libs\glm-1.0.1-light;C:\dev\cpp\GameProgramming\external\glad\include;C:\cpp-libs\glfw-3.4\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\dev\cpp\GameProgramming\external\stb_image;C:\dev\cpp\GameProgramming\external\imgui\backends;C:\dev\cpp\GameProgramming\external\imgui;C:\cpp-libs\glm-1.0.1-light;C:\dev\cpp\GameProgramming\external\glad\include;C:\cpp-libs\glfw-3.4\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\cpp-libs\glfw-3.4\build\src\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\dev\cpp\GameProgramming\external\imgui\backends;C:\dev\cpp\GameProgramming\external\imgui;C:\cpp-libs\glm-1.0.1-light;C:\dev\cpp\GameProgramming\external\glad\include;C:\cpp-libs\glfw-3.4\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\dev\cpp\GameProgramming\external\stb_image;C:\dev\cpp\GameProgramming\external\imgui\backends;C:\dev\cpp\GameProgramming\external\imgui;C:\cpp-libs\glm-1.0.1-light;C:\dev\cpp\GameProgramming\external\glad\include;C:\cpp-libs\glfw-3.4\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\cpp-libs\glfw-3.4\build\src\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -151,9 +151,12 @@
     <ClCompile Include="external\imgui\imgui_tables.cpp" />
     <ClCompile Include="external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="external\imgui\misc\cpp\imgui_stdlib.cpp" />
+    <ClCompile Include="external\stb_image\stb_image.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\SquareShape.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Vector.cpp" />
     <ClCompile Include="src\VectorShape.cpp" />
   </ItemGroup>
@@ -169,9 +172,12 @@
     <ClInclude Include="external\imgui\imstb_textedit.h" />
     <ClInclude Include="external\imgui\imstb_truetype.h" />
     <ClInclude Include="external\imgui\misc\cpp\imgui_stdlib.h" />
+    <ClInclude Include="external\stb_image\stb_image.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Shape.h" />
+    <ClInclude Include="src\SquareShape.h" />
+    <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Vector.h" />
     <ClInclude Include="src\VectorShape.h" />
   </ItemGroup>

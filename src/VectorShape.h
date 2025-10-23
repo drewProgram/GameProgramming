@@ -2,8 +2,6 @@
 
 #include "Shape.h"
 
-#include <vector>
-
 class VectorShape : public Shape
 {
 public:

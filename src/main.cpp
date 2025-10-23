@@ -1,4 +1,5 @@
-﻿#include <imgui.h>
+﻿/* EXTERNAL LIBS */
+#include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
@@ -10,19 +11,23 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+/////////////////////////////////////////////////
 
+/* C/C++ */
 #include <cmath>
 #include <memory>
 #include <vector>
-// C++ 20
-#include <ranges>
-// C++ 23
-#include <print>
+#include <ranges> // C++ 20
+#include <print>  // C++ 23
+//////////////////////////////////////////////////
 
 #include "Vector.h"
+
 #include "Shader.h"
-#include "Entity.h"
 #include "VectorShape.h"
+#include "SquareShape.h"
+
+#include "Entity.h"
 
 const unsigned int ScreenWidth = 1280;
 const unsigned int ScreenHeight = 800;
@@ -157,15 +162,29 @@ int main()
 
 	// creating shader program
 	Shader vecShader("src/shaders/vectorShape.vert", "src/shaders/vectorShape.frag");
+	Shader basicShader("src/shaders/basic.vert", "src/shaders/basic.frag");
 
 	unsigned int vecVBO;
 	unsigned int vecVAO;
 
+	unsigned int sqrVBO;
+	unsigned int sqrVAO;
+	unsigned int sqrEBO;
+
 	glGenBuffers(1, &vecVBO);
 	glGenVertexArrays(1, &vecVAO);
 
+	glGenBuffers(1, &sqrVBO);
+	glGenBuffers(1, &sqrEBO);
+	glGenVertexArrays(1, &sqrVAO);
+
+	std::shared_ptr<Texture> boxTexture = std::make_shared<Texture>("src/textures/container.jpg");
+
 	// with shared ptr we can use polymorphism and use the same shape instance for all entities
 	std::shared_ptr<VectorShape> vecShape = std::make_shared<VectorShape>(&vecShader, vecVAO, vecVBO);
+
+	std::shared_ptr<SquareShape> sqrShape = std::make_shared<SquareShape>(&basicShader, sqrVAO, sqrVBO, sqrEBO);
+	sqrShape->texture = boxTexture;
 
 	std::vector<EntityPtr> entities;
 
@@ -184,6 +203,14 @@ int main()
 	vecTest->colorVec = { 0.0f, 1.0f, 0.0f };
 	vecTest->color = ImVec4(vecTest->colorVec.x, vecTest->colorVec.y, vecTest->colorVec.z, 1.00f);
 	entities.push_back(std::move(vecTest));
+
+	EntityPtr squareTest = std::make_unique<Entity>(sqrShape);
+
+	squareTest->position = { -0.8f, 0.0f, 0.0f };
+	squareTest->randomVec = { 0.5f, 0.0f, 0.0f };
+	squareTest->colorVec = { 0.0f, 1.0f, 0.0f };
+	squareTest->color = ImVec4(squareTest->colorVec.x, squareTest->colorVec.y, squareTest->colorVec.z, 1.00f);
+	entities.push_back(std::move(squareTest));
 
 	// Wireframe mode
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -227,8 +254,8 @@ int main()
 			// std::views::enumarate is C++ 23 exclusive
 			for (auto [i, entity] : std::views::enumerate(entities))
 			{
-				std::string entityName = "V" + std::to_string(i + 1);
-				std::string title = "Vector " + std::to_string(i + 1) + " properties";
+				std::string entityName = "E" + std::to_string(i + 1);
+				std::string title = "Entity " + std::to_string(i + 1) + " properties";
 
 				if (ImGui::CollapsingHeader(title.c_str(), true))
 				{
@@ -246,8 +273,6 @@ int main()
 					ImGui::Text("Angle: %f", entity->rotationAngle);
 					ImGui::Text("Sin of angle: %f", sin(glm::radians(entity->rotationAngle)));
 					ImGui::Text("Cos of angle: %f", cos(glm::radians(entity->rotationAngle)));
-
-
 
 					ImGui::ColorEdit3(("Color##" + std::to_string(i)).c_str(), (float*)&entity->color);
 					entity->colorVec = { entity->color.x * entity->color.w, entity->color.y * entity->color.w, entity->color.z * entity->color.w };
@@ -276,6 +301,11 @@ int main()
 
 	glDeleteVertexArrays(1, &vecVAO);
 	glDeleteBuffers(1, &vecVBO);
+
+	glDeleteVertexArrays(1, &sqrVAO);
+	glDeleteBuffers(1, &sqrVBO);
+	glDeleteBuffers(1, &sqrEBO);
+
 	glDeleteProgram(vecShader.id);
 
 	// Cleanup

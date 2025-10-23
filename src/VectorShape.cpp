@@ -17,6 +17,7 @@ VectorShape::VectorShape(Shader* _shader, unsigned int _VAO, unsigned int _VBO)
 	VAO = _VAO;
 	VBO = _VBO;
 
+	position = { 0.0f, 0.0f, 0.0f };
 	mainVector = { 1.0f, 0.0f, 0.0f };
 
 	vertexData = {

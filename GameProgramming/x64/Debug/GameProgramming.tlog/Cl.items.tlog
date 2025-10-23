@@ -8,8 +8,11 @@ C:\dev\cpp\GameProgramming\external\imgui\imgui_draw.cpp;C:\dev\cpp\GameProgramm
 C:\dev\cpp\GameProgramming\external\imgui\imgui_tables.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\imgui_tables.obj
 C:\dev\cpp\GameProgramming\external\imgui\imgui_widgets.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\imgui_widgets.obj
 C:\dev\cpp\GameProgramming\external\imgui\misc\cpp\imgui_stdlib.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\imgui_stdlib.obj
+C:\dev\cpp\GameProgramming\external\stb_image\stb_image.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\stb_image.obj
 C:\dev\cpp\GameProgramming\src\Entity.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\Entity.obj
 C:\dev\cpp\GameProgramming\src\main.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\main.obj
 C:\dev\cpp\GameProgramming\src\Shader.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\Shader.obj
+C:\dev\cpp\GameProgramming\src\SquareShape.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\SquareShape.obj
+C:\dev\cpp\GameProgramming\src\Texture.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\Texture.obj
 C:\dev\cpp\GameProgramming\src\Vector.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\Vector.obj
 C:\dev\cpp\GameProgramming\src\VectorShape.cpp;C:\dev\cpp\GameProgramming\GameProgramming\x64\Debug\VectorShape.obj
