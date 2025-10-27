@@ -26,6 +26,7 @@ struct UniformValue
 };
 
 using UniformMap = std::unordered_map<std::string, UniformValue>;
+using TexturesContainer = std::vector<std::shared_ptr<Texture>>;
 
 class Shape
 {
@@ -36,7 +37,7 @@ public:
 
 	virtual void SetProperty(const Prop prop, const std::any& value) {};
 
-	std::shared_ptr<Texture> texture = nullptr;
+	TexturesContainer textures;
 protected:
 	std::vector<float> vertexData;
 	std::vector<unsigned int> indicesData;

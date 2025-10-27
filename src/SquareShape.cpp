@@ -64,12 +64,17 @@ void SquareShape::Render(const UniformMap& uniforms)
 		return;
 	}
 
-	if (texture)
-	{
-		glBindTexture(GL_TEXTURE_2D, texture->id);
-	}
-
 	shader->Use();
+
+	if (!textures.empty())
+	{
+		for (size_t i = 0; i < textures.size(); ++i)
+		{
+			shader->SetInt("tex" + std::to_string(i + 1), i);
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, textures[i]->id);
+		}
+	}
 
 	// set uniforms here
 	if (auto it = uniforms.find("transform"); it != uniforms.end())
@@ -103,6 +108,16 @@ void SquareShape::Render(const UniformMap& uniforms)
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	glBindVertexArray(0);
+
+	if (!textures.empty())
+	{
+		// unbinding textures
+		for (size_t i = 0; i < textures.size(); ++i)
+		{
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+	}
 }
 
 void SquareShape::SetProperty(const Prop prop, const std::any& value)

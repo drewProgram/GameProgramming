@@ -5,9 +5,10 @@
 
 #include <print>
 
-Texture::Texture(const char* pathToTexture)
-	: id(0), width(0), height(0), nrChannels(0)
+Texture::Texture(const char* pathToTexture, EFileTypes _fileType)
+	: id(0), width(0), height(0), nrChannels(0), fileType(_fileType)
 {
+	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data = stbi_load(pathToTexture, &width, &height, &nrChannels, 0);
 
 	if (data)
@@ -29,9 +30,15 @@ Texture::Texture(const char* pathToTexture)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		if (fileType == EFileTypes::PNG)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		}
+		else
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		}
 		glGenerateMipmap(GL_TEXTURE_2D);
-
 	}
 	else
 	{

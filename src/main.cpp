@@ -178,13 +178,15 @@ int main()
 	glGenBuffers(1, &sqrEBO);
 	glGenVertexArrays(1, &sqrVAO);
 
-	std::shared_ptr<Texture> boxTexture = std::make_shared<Texture>("src/textures/container.jpg");
+	std::shared_ptr<Texture> boxTexture = std::make_shared<Texture>("src/textures/container.jpg", EFileTypes::JPG);
+	std::shared_ptr<Texture> faceTexture = std::make_shared<Texture>("src/textures/awesomeface.png", EFileTypes::PNG);
 
 	// with shared ptr we can use polymorphism and use the same shape instance for all entities
 	std::shared_ptr<VectorShape> vecShape = std::make_shared<VectorShape>(&vecShader, vecVAO, vecVBO);
 
 	std::shared_ptr<SquareShape> sqrShape = std::make_shared<SquareShape>(&basicShader, sqrVAO, sqrVBO, sqrEBO);
-	sqrShape->texture = boxTexture;
+	sqrShape->textures.push_back(boxTexture);
+	sqrShape->textures.push_back(faceTexture);
 
 	std::vector<EntityPtr> entities;
 
@@ -264,8 +266,8 @@ int main()
 					ImGui::SliderFloat(("P.Y##" + std::to_string(i)).c_str(), &entity->position.y, -1.0f, 1.0f);
 
 					ImGui::Text("Value");
-					ImGui::SliderFloat(("V.X##" + std::to_string(i)).c_str(), &entity->randomVec.x, -1.0f, 1.0f);
-					ImGui::SliderFloat(("V.Y##" + std::to_string(i)).c_str(), &entity->randomVec.y, -1.0f, 1.0f);
+					ImGui::SliderFloat(("V.X##" + std::to_string(i)).c_str(), &entity->randomVec.x, -5.0f, 5.0f);
+					ImGui::SliderFloat(("V.Y##" + std::to_string(i)).c_str(), &entity->randomVec.y, -5.0f, 5.0f);
 
 					ImGui::Text("Rotation Angle");
 					ImGui::SliderFloat(("V.R##" + std::to_string(i)).c_str(), &entity->rotationAngle, -360.0f, 360.0f);
